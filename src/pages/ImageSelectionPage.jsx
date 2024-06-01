@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../UserContext';
+import './ImageSelectionPage.css'; // Import the CSS file
 
 export default function ImageSelectionPage({ onSelectionComplete }) {
   const { setHasSelectedImages } = useUser();
   const [selectedImages, setSelectedImages] = useState([]);
   const [images, setImages] = useState([]);
+  const [recommendedImages, setRecommendedImages] = useState([]);
 
   useEffect(() => {
     async function fetchImages() {
@@ -30,10 +32,16 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
     });
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (selectedImages.length >= 5) {
-      setHasSelectedImages(true);
-      onSelectionComplete();
+      try {
+        const response = await axios.post('/api/selected-images', { selected_images: selectedImages });
+        setRecommendedImages(response.data);
+        setHasSelectedImages(true);
+        onSelectionComplete();
+      } catch (error) {
+        console.error('Error submitting selected images:', error);
+      }
     } else {
       alert('Please select at least 5 images');
     }
@@ -43,17 +51,31 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
     <div>
       <h1>Select at least 5 images</h1>
       <div className="image-grid">
-        {images.map(image => (
+        {images.map((image, index) => (
           <img
-            key={image}
-            src={`path/to/your/images/${image}`}  // Adjust the path to where your images are stored
+            key={index}
+            src={`/api/uploads/${image}`}
             alt={image}
             onClick={() => handleImageClick(image)}
-            style={{ border: selectedImages.includes(image) ? '2px solid blue' : 'none' }}
+            className={selectedImages.includes(image) ? 'selected' : ''}
           />
         ))}
       </div>
       <button onClick={handleContinue}>Continue</button>
+      {recommendedImages.length > 0 && (
+        <div>
+          <h2>Recommended Images</h2>
+          <div className="image-grid">
+            {recommendedImages.map((image, index) => (
+              <img
+                key={index}
+                src={`/api/uploads/${image}`}
+                alt={image}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

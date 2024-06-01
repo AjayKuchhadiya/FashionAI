@@ -1,0 +1,33 @@
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  max-width: 100%;
+}
+
+.image-grid img {
+  width: 100px;  /* Set a fixed width for the images */
+  height: 100px; /* Set a fixed height for the images */
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s, border 0.2s;
+}
+
+.image-grid img.selected {
+  transform: scale(1.05);
+  border: 2px solid blue;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
