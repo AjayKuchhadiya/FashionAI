@@ -10,7 +10,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/FashionAI- RS/users.db'
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 CORS(app)
 
-
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
@@ -41,11 +40,15 @@ def register():
     email = data.get('email')
     password = data.get('password')
 
-    print('Callled the route')
+    print('Called the route')
     
     if not name or not email or not password:
         return jsonify({"error": "Name, email, and password are required"}), 400
     
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({"error": "Email already registered"}), 409
+
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     
     new_user = User(name=name, email=email, password=hashed_password)
@@ -87,9 +90,6 @@ def login():
         return response
     else:
         return jsonify({"error": "Invalid email or password"}), 422
-
-
-
 
 @app.route('/profile', methods=['GET'])
 @jwt_required()
