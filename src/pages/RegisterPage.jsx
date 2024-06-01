@@ -6,27 +6,35 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+  const [error, setError] = useState('');
+
   async function registerUser(ev) {
     ev.preventDefault();
     try {
-      const response = await axios.post('/api/register', {  // Use /api prefix
+      const response = await axios.post('/api/register', {  // Updated to use /api prefix
         name,
         email,
         password,
       });
       console.log(response.data);  // Logging response from backend (optional)
       alert('Registration successful. Now you can log in');
+      // Optionally, redirect the user to the login page after successful registration
+      // history.push('/login');
     } catch (e) {
       console.error(e);  // Logging error (optional)
-      alert('Registration failed. Please try again later');
+      if (e.response && e.response.data && e.response.data.error) {
+        setError(e.response.data.error);
+      } else {
+        setError('Registration failed. Please try again later');
+      }
     }
   }
-  
+
   return (
     <div className="mt-4 grow flex items-center justify-around">
       <div className="mt-60">
         <h1 className="text-4xl text-center mb-4">Register</h1>
+        {error && <div className="text-red-500 mb-4">{error}</div>}
         <form className="max-w-md mx-auto" onSubmit={registerUser}>
           <input type="text"
                  placeholder="John Doe"
