@@ -89,7 +89,7 @@ def login():
         response.set_cookie('token', access_token)
         return response
     else:
-        return jsonify({"error": "Invalid email or password"}), 422
+        return jsonify({"error": "Invalid email or password"}), 401  # Changed to 401 Unauthorized
 
 @app.route('/profile', methods=['GET'])
 @jwt_required()
