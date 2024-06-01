@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -27,7 +27,7 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    return 'Welcome to the Flask app!'    
+    return 'Welcome to the Flask app!'
 
 @app.route('/test', methods=['GET'])
 def test():
@@ -40,8 +40,6 @@ def register():
     email = data.get('email')
     password = data.get('password')
 
-    print('Called the route')
-    
     if not name or not email or not password:
         return jsonify({"error": "Name, email, and password are required"}), 400
     
@@ -89,7 +87,7 @@ def login():
         response.set_cookie('token', access_token)
         return response
     else:
-        return jsonify({"error": "Invalid email or password"}), 401  # Changed to 401 Unauthorized
+        return jsonify({"error": "Invalid email or password"}), 401
 
 @app.route('/profile', methods=['GET'])
 @jwt_required()
@@ -111,6 +109,31 @@ def logout():
     response = make_response(jsonify(True))
     response.set_cookie('token', '', expires=0)
     return response
+
+@app.route('/images', methods=['GET'])
+def get_images():
+    images = [
+        '0110065001.jpg', '0110065002.jpg', '0110065011.jpg', '0111593001.jpg', '0118458003.jpg',
+        '0110065001.jpg', '0110065002.jpg', '0110065011.jpg', '0111593001.jpg', '0118458003.jpg',
+        '0110065001.jpg', '0110065002.jpg', '0110065011.jpg', '0111593001.jpg', '0118458003.jpg',
+        '0110065001.jpg', '0110065002.jpg', '0110065011.jpg', '0111593001.jpg', '0118458003.jpg'
+    ]
+    return jsonify(images)
+
+@app.route('/selected-images', methods=['POST'])
+def selected_images():
+    data = request.json
+    selected_images = data.get('selected_images')
+    if not selected_images or len(selected_images) < 5:
+        return jsonify({"error": "At least 5 images must be selected"}), 400
+    
+    recommended_images = [f"recommended_{i}.jpg" for i in range(1, 6)]
+    return jsonify(recommended_images)
+
+@app.route('/uploads/<filename>')
+def serve_image(filename):
+    directory = 'C:/FashionAI- RS/images/011'
+    return send_from_directory(directory, filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
