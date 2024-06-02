@@ -10,8 +10,8 @@ import pandas as pd
 from collaborative_filtering_rs.user_sim import similar_user
 
 # Create a folder to save images uploaded by user for image-to-image search
-if not os.path.exists('uploads'):
-    os.makedirs('uploads')
+if not os.path.exists('User_uploads'):
+    os.makedirs('User_uploads')
 
 
 
@@ -168,7 +168,7 @@ def selected_images():
         if not matching_articles.empty:
             product_name = matching_articles.iloc[0]['prod_name']
             di[product_name] = r'C:/FashionAI- RS/images/' + i[:3] + '/' + i + '.jpg'
-            print(i)
+            # print(i)
         else:
             print(f'Article ID {i} not found in articles DataFrame')
 
