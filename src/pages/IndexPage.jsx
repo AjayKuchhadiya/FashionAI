@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../UserContext';
 import ImageSelectionPage from './ImageSelectionPage';
@@ -54,30 +54,30 @@ export default function IndexPage() {
 
   return (
     <div>
-      <div className="upload-section">
+      <div style={styles.uploadSection}>
         <h2>Upload an Image</h2>
         <input type="file" onChange={handleImageUpload} />
         {uploading && <p>Uploading...</p>}
       </div>
-      <div className="recommended-section">
+      <div style={styles.recommendedSection}>
         <h2>Recommended Products</h2>
-        <div className="product-grid">
+        <div style={styles.productGrid}>
           {recommendedImages.map((product, index) => (
-            <div key={index} className="product-item">
-              <img src={`/api/uploads/${product.image_path}`} alt={product.product_name} />
+            <div key={index} style={styles.productItem}>
+              <img src={`api/uploads/${product.image_path.split('/').slice(-1).join('/')}`} alt={product.product_name} style={styles.productImage} />
               <p>{product.product_name}</p>
             </div>
           ))}
         </div>
       </div>
-      <div className="uploaded-products-section">
+      <div style={styles.uploadedProductsSection}>
         {uploadedProducts.length > 0 && (
           <>
             <h2>Uploaded Products</h2>
-            <div className="product-grid">
+            <div style={styles.productGrid}>
               {uploadedProducts.map(product => (
-                <div key={product.id} className="product-item">
-                  <img src={product.image_url} alt={product.name} />
+                <div key={product.id} style={styles.productItem}>
+                  <img src={product.image_url} alt={product.name} style={styles.productImage} />
                   <p>{product.name}</p>
                   <p>${product.price}</p>
                 </div>
@@ -89,3 +89,27 @@ export default function IndexPage() {
     </div>
   );
 }
+
+const styles = {
+  uploadSection: {
+    margin: '20px 0',
+  },
+  recommendedSection: {
+    margin: '20px 0',
+  },
+  uploadedProductsSection: {
+    margin: '20px 0',
+  },
+  productGrid: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  productItem: {
+    width: '200px',
+    margin: '10px',
+  },
+  productImage: {
+    width: '100%',
+    height: 'auto',
+  },
+};
