@@ -159,7 +159,7 @@ def selected_images():
     if len(li) < 10:
         return jsonify({"error": "Not enough similar items found to recommend"}), 400
 
-    li_2 = random.sample(li, 10)  # select any 10 items
+    li_2 = random.sample(set(li), 10)  # select any 10 items
     print('666666666666666666666666',li_2)
 
     di = {}
@@ -168,6 +168,7 @@ def selected_images():
         if not matching_articles.empty:
             product_name = matching_articles.iloc[0]['prod_name']
             di[product_name] = r'C:/FashionAI- RS/images/' + i[:3] + '/' + i + '.jpg'
+            print(i)
         else:
             print(f'Article ID {i} not found in articles DataFrame')
 
