@@ -7,7 +7,6 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
   const { setHasSelectedImages } = useUser();
   const [selectedImages, setSelectedImages] = useState([]);
   const [images, setImages] = useState([]);
-  const [recommendedImages, setRecommendedImages] = useState([]);
 
   useEffect(() => {
     async function fetchImages() {
@@ -34,11 +33,10 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
 
   const handleContinue = async () => {
     if (selectedImages.length >= 5) {
+      setHasSelectedImages(true);  // Set the state here
       try {
         const response = await axios.post('/api/selected-images', { selected_images: selectedImages });
-        setRecommendedImages(response.data);
-        setHasSelectedImages(true);
-        onSelectionComplete();
+        onSelectionComplete(response.data);  // Pass the recommended images
       } catch (error) {
         console.error('Error submitting selected images:', error);
       }
@@ -68,22 +66,6 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
         ))}
       </div>
       <button onClick={handleContinue}>Continue</button>
-      {recommendedImages.length > 0 && (
-        <div>
-          <h2>Recommended Images</h2>
-          <div className="image-grid">
-            {recommendedImages.map((item, index) => (
-              <div key={index} className="image-item">
-                <img
-                  src={`/api/uploads/${item.image_path}`}
-                  alt={item.product_name}
-                />
-                <p>{item.product_name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

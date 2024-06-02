@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '../UserContext';
+import ImageSelectionPage from './ImageSelectionPage';
 
 export default function IndexPage() {
   const { user, hasSelectedImages } = useUser();
-  const [products, setProducts] = useState([]);
+  const [recommendedImages, setRecommendedImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadedProducts, setUploadedProducts] = useState([]);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -19,13 +21,24 @@ export default function IndexPage() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setProducts(response.data);
+      setUploadedProducts(response.data);
     } catch (error) {
       console.error('Error uploading image:', error);
     } finally {
       setUploading(false);
     }
   };
+
+  const handleSelectionComplete = (images) => {
+    setRecommendedImages(images);
+  };
+
+  useEffect(() => {
+    if (hasSelectedImages && recommendedImages.length === 0) {
+      // Fetch the recommended images again if needed
+      // This part depends on your application logic
+    }
+  }, [hasSelectedImages]);
 
   if (!user) {
     return (
@@ -36,25 +49,42 @@ export default function IndexPage() {
   }
 
   if (!hasSelectedImages) {
-    return (
-      <div>
-        Please select at least 5 images first.
-      </div>
-    );
+    return <ImageSelectionPage onSelectionComplete={handleSelectionComplete} />;
   }
 
   return (
     <div>
-      <input type="file" onChange={handleImageUpload} />
-      {uploading && <p>Uploading...</p>}
-      <div className="product-grid">
-        {products.map(product => (
-          <div key={product.id} className="product-item">
-            <img src={product.image_url} alt={product.name} />
-            <p>{product.name}</p>
-            <p>${product.price}</p>
-          </div>
-        ))}
+      <div className="upload-section">
+        <h2>Upload an Image</h2>
+        <input type="file" onChange={handleImageUpload} />
+        {uploading && <p>Uploading...</p>}
+      </div>
+      <div className="recommended-section">
+        <h2>Recommended Products</h2>
+        <div className="product-grid">
+          {recommendedImages.map((product, index) => (
+            <div key={index} className="product-item">
+              <img src={`/api/uploads/${product.image_path}`} alt={product.product_name} />
+              <p>{product.product_name}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="uploaded-products-section">
+        {uploadedProducts.length > 0 && (
+          <>
+            <h2>Uploaded Products</h2>
+            <div className="product-grid">
+              {uploadedProducts.map(product => (
+                <div key={product.id} className="product-item">
+                  <img src={product.image_url} alt={product.name} />
+                  <p>{product.name}</p>
+                  <p>${product.price}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
