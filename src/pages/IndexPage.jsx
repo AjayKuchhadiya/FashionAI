@@ -64,7 +64,7 @@ export default function IndexPage() {
         <div style={styles.productGrid}>
           {recommendedImages.map((product, index) => (
             <div key={index} style={styles.productItem}>
-              <img src={`api/uploads/${product.image_path.split('/').slice(-1).join('/')}`} alt={product.product_name} style={styles.productImage} />
+              <img src={`api/uploads/${product.image_path.split('/').pop()}`} alt={product.product_name} style={styles.productImage} />
               <p>{product.product_name}</p>
             </div>
           ))}
@@ -103,13 +103,15 @@ const styles = {
   productGrid: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   productItem: {
-    width: '200px',
-    margin: '10px',
+    flexBasis: 'calc(20% - 10px)', // 5 items per row with some spacing
+    margin: '5px',
+    boxSizing: 'border-box',
   },
   productImage: {
-    width: '100%',
+    width: '50%', // Reduce size to 50%
     height: 'auto',
   },
 };
