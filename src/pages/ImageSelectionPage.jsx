@@ -22,7 +22,7 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
     fetchImages();
   }, []);
 
-  const handleImageClick = (image) => {
+  const handleImageSelect = (image) => {
     setSelectedImages(prev => {
       if (prev.includes(image)) {
         return prev.filter(img => img !== image);
@@ -52,13 +52,19 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
       <h1>Select at least 5 images</h1>
       <div className="image-grid">
         {images.map((image, index) => (
-          <img
-            key={index}
-            src={`/api/uploads/${image}`}
-            alt={image}
-            onClick={() => handleImageClick(image)}
-            className={selectedImages.includes(image) ? 'selected' : ''}
-          />
+          <div key={index} className="image-item">
+            <img
+              src={`/api/uploads/${image}`}
+              alt={image}
+              className={selectedImages.includes(image) ? 'selected' : ''}
+              onClick={() => handleImageSelect(image)}
+            />
+            <input
+              type="checkbox"
+              checked={selectedImages.includes(image)}
+              onChange={() => handleImageSelect(image)}
+            />
+          </div>
         ))}
       </div>
       <button onClick={handleContinue}>Continue</button>
@@ -66,12 +72,14 @@ export default function ImageSelectionPage({ onSelectionComplete }) {
         <div>
           <h2>Recommended Images</h2>
           <div className="image-grid">
-            {recommendedImages.map((image, index) => (
-              <img
-                key={index}
-                src={`/api/uploads/${image}`}
-                alt={image}
-              />
+            {recommendedImages.map((item, index) => (
+              <div key={index} className="image-item">
+                <img
+                  src={`/api/uploads/${item.image_path}`}
+                  alt={item.product_name}
+                />
+                <p>{item.product_name}</p>
+              </div>
             ))}
           </div>
         </div>

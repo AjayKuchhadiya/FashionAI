@@ -5,6 +5,12 @@
   max-width: 100%;
 }
 
+.image-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .image-grid img {
   width: 100px;  /* Set a fixed width for the images */
   height: 100px; /* Set a fixed height for the images */
@@ -16,6 +22,12 @@
 .image-grid img.selected {
   transform: scale(1.05);
   border: 2px solid blue;
+}
+
+.image-item p {
+  margin-top: 5px;
+  text-align: center;
+  font-size: 14px;
 }
 
 button {
