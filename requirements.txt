@@ -12,7 +12,9 @@ spicy
 scikit-learn
 fastparquet
 tensorflow
-
+langchain==0.1.0 
+langchain-openai
+langchain-groq
 customtkinter==4.6.1
 darkdetect==0.7.1
 diffusers==0.3.0
