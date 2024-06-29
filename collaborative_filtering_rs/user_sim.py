@@ -9,10 +9,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from sklearn.decomposition import TruncatedSVD
 
-def similar_user(userID, user_articles, positive_transactions_parquet, n_components=12):
+def similar_user(userID, user_articles, positive_transactions_df, n_components=12):
     try:
         # Read positive_transactions_parquet
-        positive_transactions_df = pd.read_parquet(positive_transactions_parquet)
+        positive_transactions_df = positive_transactions_df
         
         # Concatenate user_articles with userID and convert to DataFrame
         user_data = pd.DataFrame([user_articles], columns=['article_1', 'article_2', 'article_3', 'article_4', 'article_5', 'article_6', 'article_7', 'article_8', 'article_9', 'article_10', 'article_11', 'article_12'])
@@ -47,12 +47,11 @@ userID = '00000dbacae5abe5e23885899a1fa44253a17956c6d1c3d25f88aa139fdfc657'
 user_articles = ['0924243001', '0781758057', '0309864012', '0918522001', '0863646004', '0924243002', '', '', '', '', '', '']
 positive_transactions_parquet = 'positive_transactions.parquet'
 
-# Call the function
-similar_users = similar_user(userID, user_articles, positive_transactions_parquet)
+# # Call the function
+# similar_users = similar_user(userID, user_articles, positive_transactions_parquet)
 
-print(f"\n\nTop 3 most similar users for customer {userID} based on their interactions:")
-print(similar_users)
-
+# print(f"\n\nTop 3 most similar users for customer {userID} based on their interactions:")
+# print(similar_users)
 
 
 # 0924243001 0781758057 0751471001 0309864012 0918522001 0863646004 0924243002 0872537006 0448509014 0562245001 0915529003 0842976005
