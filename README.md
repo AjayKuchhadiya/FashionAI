@@ -89,6 +89,4 @@ We welcome contributions! Please follow these steps to contribute:
 ## Future Work:
 1. Adding a chatbot
 2. Text to text search (we trained a model for the same but due to low accuracy we had to drop it)
----
 
-Feel free to modify and expand this template as needed to better fit your project's specifics.
